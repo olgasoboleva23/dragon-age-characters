@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  frontend:
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./app:/home/app
+      - /home/app/node_modules
+    ports:
+      - "80:5173"
+
+  webdis:
+    image: nicolas/webdis:latest
+    ports:
+      - "7379:7379"
