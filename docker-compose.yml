@@ -23,6 +23,7 @@ services:
   api:
     environment:
       - MONGODB_URI=mongodb://db:27017/dragonAge
+      - ORIGIN=http://localhost
     build:
       context: https://github.com/paigeegorry/dragon-age-api.git
     command: sh -c "npm run seed && npm run start"
