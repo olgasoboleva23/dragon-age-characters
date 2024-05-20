@@ -5,5 +5,5 @@ export const CacheAPI = axios.create({
 });
 
 export const DACharactersAPI = axios.create({
-  baseURL: 'https://dragon-age-api.fly.dev',
+  baseURL: 'http://localhost:3000',
 });

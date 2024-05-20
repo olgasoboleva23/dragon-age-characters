@@ -10,8 +10,26 @@ services:
       - /home/app/node_modules
     ports:
       - "80:5173"
+    depends_on:
+      - cache
 
-  webdis:
+  cache:
     image: nicolas/webdis:latest
     ports:
       - "7379:7379"
+    depends_on:
+      - api
+
+  api:
+    environment:
+      - MONGODB_URI=mongodb://db:27017/dragonAge
+    build:
+      context: https://github.com/paigeegorry/dragon-age-api.git
+    command: sh -c "npm run seed && npm run start"
+    ports:
+      - "3000:7890"
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
