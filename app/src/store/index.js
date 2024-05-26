@@ -8,29 +8,37 @@ const store = createStore({
   mutations: {
     setCharacters(state, values) {
       state.characters = values;
-      // console.log(values)
     }
   },
   actions: {
+    async getFromCacheOneCharacterDetails({dispatch, commit}, {key}) {
+      return await dispatch('getFromCache', {key});
+    },
+    async getFromCacheCharacters({dispatch, commit}, {key}) {
+      commit('setCharacters', await dispatch('getFromCache', {key}));
+    },
     async getFromCache({dispatch, commit}, {key}) {
       try {
         let cacheKey = encodeURIComponent(btoa(key));
         let response = await CacheAPI.get(`/GET/${cacheKey}`);
         if (response?.data?.GET) {
-          commit('setCharacters', JSON.parse(unescape(response?.data?.GET)));
+          // commit('setCharacters', JSON.parse(unescape(response?.data?.GET)));
+          return JSON.parse(unescape(response?.data?.GET));
         } else {
-          commit('setCharacters', await dispatch('getFromApi', {key}));
+          // commit('setCharacters', await dispatch('getFromApi', {key}));
+          return await dispatch('getFromApi', {key});
         }
       } catch (error) {
         console.error(error);
-        commit('setCharacters', await dispatch('getFromApi', {key}));
+        return await dispatch('getFromApi', {key});
+        // commit('setCharacters', await dispatch('getFromApi', {key}));
       }
     },
     async getFromApi({dispatch, commit}, {key}) {
       try {
         let response = await DACharactersAPI.get(key);
-        commit(await dispatch('setToCache', {key: key, value: response?.data}));
-        return response;
+        await dispatch('setToCache', {key: key, value: response?.data});
+        return response?.data;
       } catch (error) {
         console.error(error);
         return null;

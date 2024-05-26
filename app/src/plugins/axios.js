@@ -5,5 +5,5 @@ export const CacheAPI = axios.create({
 });
 
 export const DACharactersAPI = axios.create({
-  baseURL: 'http://localhost:3000/api/v1/characters/',
+  baseURL: 'http://localhost:3000/api/v1/characters',
 });
