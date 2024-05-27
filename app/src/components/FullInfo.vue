@@ -13,8 +13,6 @@ let characterDetails = ref({});
 characterDetails = await store.dispatch("getFromCacheOneCharacterDetails", {key: `/${props.character_id}`});
 console.log({characterDetails})
 
-console.log('created',props.character_id)
-
 const races = {
   dwarf: {
     icon: 'https://www.svgrepo.com/show/323862/dwarf-helmet.svg',
@@ -40,9 +38,9 @@ if (characterDetails?.race) {
 
 </script>
 <template>
-  <v-card v-if="characterDetails" variant="flat" color="teal" max-width="200">
+  <v-card v-if="characterDetails" variant="flat" color="teal" max-width="200" class="pa-2 text-caption">
     <v-row justify="end" no-gutters>
-      <v-btn @click="$emit('closeModal')">close</v-btn>
+      <v-btn @click="$emit('closeModal')">close<v-icon icon="mdi-close-outline"></v-icon></v-btn>
     </v-row>
     <v-img
       v-if="characterDetails?.photo"
@@ -51,9 +49,7 @@ if (characterDetails?.race) {
       position="50% top"
       :src="characterDetails.photo.substr(0, characterDetails.photo.indexOf('/revision/'))"
     />
-    <div v-if="characterDetails.gender">Gender: {{characterDetails.gender}}</div>
-    <div v-if="characterDetails.class">Class: {{characterDetails.class}}</div>
-    <div v-if="characterDetails.location">Location: {{characterDetails.location}}</div>
+    <!-- Race -->
     <v-row v-if="characterDetails.race" no-gutters>
       <v-col cols=auto>Race: </v-col>
       <v-col cols=2>
@@ -65,14 +61,20 @@ if (characterDetails?.race) {
               </template>
             </v-hover>
           </template>
-          <div style="max-width: 150px;">{{race.desc}}</div>
+          <div class="py-2 px-3 bg-teal-lighten-4 text-cyan-darken-4" style="max-width: 200px;">{{race.desc}}</div>
         </v-tooltip>
       </v-col>
     </v-row>
+    <div v-if="characterDetails.gender">Gender: {{characterDetails.gender}}</div>
+    <div v-if="characterDetails.class">Class: {{characterDetails.class}}</div>
+    <div v-if="characterDetails.location">Location: {{characterDetails.location}}</div>
   </v-card>
 </template>
-<style scoped>
+<style>
 .invertedIcon {
   filter: invert(100%);
+}
+.v-tooltip > .v-overlay__content {
+  padding: 0 !important;
 }
 </style>

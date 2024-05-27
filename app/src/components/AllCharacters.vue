@@ -11,6 +11,7 @@ const perPage = ref(20);
 
 function getCharacters() {
   store.dispatch("getFromCacheCharacters", {key: `/?page=${page.value}&perPage=${perPage.value}`});
+  console.log('characters',characters.value)
 }
 
 getCharacters();

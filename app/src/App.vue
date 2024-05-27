@@ -4,7 +4,7 @@ import FilterPanel from './components/FilterPanel.vue'
 </script>
 
 <template>
-  <div>
+  <div class="bg-white">
     <FilterPanel />
     <AllCharacters />
   </div>
