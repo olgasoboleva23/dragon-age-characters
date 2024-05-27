@@ -3,12 +3,20 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: () => ({
-    characters: []
+    characters: [],
+    perPage: 25,
+    page: 1
   }),
   mutations: {
     setCharacters(state, values) {
       state.characters = values;
-    }
+    },
+    setPerPage(state, value) {
+      state.perPage = value;
+    },
+    setPage(state, value) {
+      state.page = value;
+    },
   },
   actions: {
     async getFromCacheOneCharacterDetails({dispatch, commit}, {key}) {
@@ -22,16 +30,13 @@ const store = createStore({
         let cacheKey = encodeURIComponent(btoa(key));
         let response = await CacheAPI.get(`/GET/${cacheKey}`);
         if (response?.data?.GET) {
-          // commit('setCharacters', JSON.parse(unescape(response?.data?.GET)));
           return JSON.parse(unescape(response?.data?.GET));
         } else {
-          // commit('setCharacters', await dispatch('getFromApi', {key}));
           return await dispatch('getFromApi', {key});
         }
       } catch (error) {
         console.error(error);
         return await dispatch('getFromApi', {key});
-        // commit('setCharacters', await dispatch('getFromApi', {key}));
       }
     },
     async getFromApi({dispatch, commit}, {key}) {

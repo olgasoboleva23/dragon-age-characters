@@ -4,9 +4,16 @@ import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore();
 const characters = computed(() => store.state.characters)
+const page = computed({
+  get() {
+    return store.state.page;
+  },
+  set(newVal) {
+    store.commit('setPage', newVal)
+  }
+})
 
 const total = 792;
-const page = ref(1);
 const perPage = ref(20);
 
 function getCharacters() {
@@ -17,10 +24,6 @@ function getCharacters() {
 getCharacters();
 
 watch(page, (newVal, oldVal) => {
-  getCharacters();
-});
-
-watch(perPage, (newVal, oldVal) => {
   getCharacters();
 });
 </script>
@@ -39,6 +42,7 @@ watch(perPage, (newVal, oldVal) => {
       v-model="page"
       :length="Math.floor(total/perPage)"
       :total-visible="7"
+      color="teal-darken-2"
     />
   </v-row>
 </template>
