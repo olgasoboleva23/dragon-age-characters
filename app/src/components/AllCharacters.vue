@@ -44,9 +44,11 @@ watch([page, perPage], () => {
   <div>
     <v-row no-gutters>
       <v-col 
-        cols="3" 
         v-for="character in characters" 
         :key="character.id"
+        sm="6"
+        md="4"
+        lg="3"
       >
         <CharacterCard :character="character" />
       </v-col>
