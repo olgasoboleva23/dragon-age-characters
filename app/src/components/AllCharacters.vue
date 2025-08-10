@@ -1,53 +1,59 @@
 <script setup>
-import CharacterCard from '../components/CharacterCard.vue'
-import { ref, computed, watch } from 'vue'
+import CharacterCard from './CharacterCard.vue'
+import { computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
-const store = useStore();
+
+const store = useStore()
+
+// Computed properties
 const characters = computed(() => store.state.characters)
 const page = computed({
-  get() {
-    return store.state.page;
-  },
-  set(newVal) {
-    store.commit('setPage', newVal)
-  }
+  get: () => store.state.page,
+  set: (newVal) => store.commit('setPage', newVal)
 })
 
-const total = 792;
-const perPage = ref(20);
+// Constants
+const TOTAL_CHARACTERS = 792
+const PER_PAGE = 20
+const TOTAL_PAGES = Math.ceil(TOTAL_CHARACTERS / PER_PAGE)
 
-function getCharacters() {
-  store.dispatch("getFromCacheCharacters", {key: `/?page=${page.value}&perPage=${perPage.value}`});
-  console.log('characters',characters.value)
+// Methods
+const getCharacters = () => {
+  store.dispatch("getFromCacheCharacters", {
+    key: `/?page=${page.value}&perPage=${PER_PAGE}`
+  })
 }
 
-getCharacters();
+// Lifecycle
+onMounted(() => {
+  getCharacters()
+})
 
-watch(page, (newVal, oldVal) => {
-  getCharacters();
-});
+// Watchers
+watch(page, () => {
+  getCharacters()
+})
 </script>
 
 <template>
-  <v-row no-gutters>
-    <v-col cols="3" v-for="character in characters">
-    <CharacterCard
-        :character="character"
+  <div>
+    <v-row no-gutters>
+      <v-col 
+        cols="3" 
+        v-for="character in characters" 
         :key="character.id"
-    />
-    </v-col>
-  </v-row>
-  <v-row justify="center" no-gutters>
-    <v-pagination
-      v-model="page"
-      :length="Math.floor(total/perPage)"
-      :total-visible="7"
-      color="teal-darken-2"
-    />
-  </v-row>
+      >
+        <CharacterCard :character="character" />
+      </v-col>
+    </v-row>
+    
+    <v-row justify="center" no-gutters>
+      <v-pagination
+        v-model="page"
+        :length="TOTAL_PAGES"
+        :total-visible="7"
+        color="teal-darken-2"
+      />
+    </v-row>
+  </div>
 </template>
-<script>
-export default {
-  name: 'AllCharacters'
-}
-</script>

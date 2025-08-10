@@ -10,6 +10,7 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 // Components
 import App from './App.vue'
+import fontawesome from './plugins/fontawesome'
 
 // const vuetify = createVuetify({})
 const vuetify = createVuetify({
@@ -25,4 +26,5 @@ const vuetify = createVuetify({
 createApp(App)
    .use(vuetify)
    .use(store)
+   .use(fontawesome)
    .mount('#app')
