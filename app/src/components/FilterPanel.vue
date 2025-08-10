@@ -6,18 +6,48 @@ const store = useStore()
 
 const perPage = computed(() => store.state.perPage)
 const page = computed(() => store.state.page)
-
 const btns = ref([25, 50, 75, 100])
 
+const searchFields = [
+  {
+    key: 'media',
+    label: 'Search by media (comic, game, etc)',
+    style: 'max-width: 320px;'
+  },
+  {
+    key: 'quest',
+    label: 'Search by quest',
+    style: 'max-width: 320px; margin-left: 16px;'
+  }
+]
+
+const searchValues = ref({ media: '', quest: '' })
+
 function getCharacters() {
-  store.dispatch("getFromCacheCharacters", {
-    key: `/?page=${page.value}&perPage=${perPage.value}`
-  })
+  let key = `/?page=${page.value}&perPage=${perPage.value}`
+  if (searchValues.value.media) {
+    key += `&appearances=${encodeURIComponent(searchValues.value.media)}`
+  }
+  if (searchValues.value.quest) {
+    key += `&quests=${encodeURIComponent(searchValues.value.quest)}`
+  }
+  store.dispatch("getFromCacheCharacters", { key })
 }
 
 watch(perPage, () => {
   getCharacters()
 })
+
+function onSearch() {
+  store.commit('setPage', 1)
+  getCharacters()
+}
+
+function onClear(field) {
+  searchValues.value[field] = ''
+  store.commit('setPage', 1)
+  getCharacters()
+}
 </script>
 
 <template>
@@ -35,6 +65,20 @@ watch(perPage, () => {
       >
         {{ btnCount }}
       </v-btn>
+      <v-spacer />
+      <template v-for="field in searchFields" :key="field.key">
+        <v-text-field
+          v-model="searchValues[field.key]"
+          :label="field.label"
+          clearable
+          hide-details
+          solo
+          :style="field.style"
+          append-inner-icon="mdi-magnify"
+          @click:append-inner="() => onSearch(field.key)"
+          @click:clear="() => onClear(field.key)"
+        />
+      </template>
     </v-toolbar>
   </div>
 </template>
