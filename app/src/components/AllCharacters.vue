@@ -11,16 +11,16 @@ const page = computed({
   get: () => store.state.page,
   set: (newVal) => store.commit('setPage', newVal)
 })
+const perPage = computed(() => store.state.perPage)
 
 // Constants
 const TOTAL_CHARACTERS = 792
-const PER_PAGE = 20
-const TOTAL_PAGES = Math.ceil(TOTAL_CHARACTERS / PER_PAGE)
+const TOTAL_PAGES = computed(() => Math.ceil(TOTAL_CHARACTERS / perPage.value))
 
 // Methods
 const getCharacters = () => {
   store.dispatch("getFromCacheCharacters", {
-    key: `/?page=${page.value}&perPage=${PER_PAGE}`
+    key: `/?page=${page.value}&perPage=${perPage.value}`
   })
 }
 
@@ -30,8 +30,13 @@ onMounted(() => {
 })
 
 // Watchers
-watch(page, () => {
-  getCharacters()
+watch([page, perPage], () => {
+  // Clamp page to max if perPage changes and page is out of range
+  if (page.value > TOTAL_PAGES.value) {
+    store.commit('setPage', TOTAL_PAGES.value)
+  } else {
+    getCharacters()
+  }
 })
 </script>
 
