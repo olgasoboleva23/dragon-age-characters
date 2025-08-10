@@ -6,18 +6,16 @@ const store = useStore()
 
 const perPage = computed(() => store.state.perPage)
 const page = computed(() => store.state.page)
-const btns = ref([25, 50, 75, 100])
+const btns = ref([24, 48, 72, 100])
 
 const searchFields = [
   {
     key: 'media',
-    label: 'Search by media (comic, game, etc)',
-    style: 'max-width: 320px;'
+    label: 'Search by media',
   },
   {
     key: 'quest',
     label: 'Search by quest',
-    style: 'max-width: 320px; margin-left: 16px;'
   }
 ]
 
@@ -51,34 +49,39 @@ function onClear(field) {
 </script>
 
 <template>
-  <div>
-    <v-toolbar border title="Dragon Age characters list">
-      <div class="text-teal-darken-2 text-overline font-weight-bold pr-3">
-        Show
-      </div>
-      <v-btn
-        v-for="btnCount in btns"
-        :key="btnCount"
-        @click="store.commit('setPerPage', btnCount)"
-        :color="btnCount === perPage ? 'deep-orange-darken-4' : 'teal-darken-2'"
-        :variant="btnCount === perPage ? 'outlined' : 'text'"
-      >
-        {{ btnCount }}
-      </v-btn>
-      <v-spacer />
-      <template v-for="field in searchFields" :key="field.key">
-        <v-text-field
-          v-model="searchValues[field.key]"
-          :label="field.label"
-          clearable
-          hide-details
-          solo
-          :style="field.style"
-          append-inner-icon="mdi-magnify"
-          @click:append-inner="() => onSearch(field.key)"
-          @click:clear="() => onClear(field.key)"
-        />
-      </template>
-    </v-toolbar>
-  </div>
+  <v-toolbar border title="Dragon Age characters list" class="pa-4 ga-4 text-start" density="compact">
+    <div class="text-teal-darken-2 text-overline font-weight-bold pr-4">
+      Show
+    </div>
+    <v-btn
+      v-for="(btnCount, index) in btns"
+      :key="btnCount"
+      @click="store.commit('setPerPage', btnCount)"
+      :color="btnCount === perPage ? 'deep-orange-darken-4' : 'teal-darken-2'"
+      :variant="btnCount === perPage ? 'outlined' : 'text'"
+      :class="{'ma-0': index === btns.length - 1}"
+    >
+      {{ btnCount }}
+    </v-btn>
+    <template #extension>
+      <v-row justify="end" class="ga-4" no-gutters>
+        <v-col v-for="field in searchFields" :key="field.key" sm="5" md="4" lg="3">
+          <v-text-field
+            v-model="searchValues[field.key]"
+            :label="field.label"
+            clearable
+            hide-details
+            variant="outlined"
+            single-line
+            glow
+            density="compact"
+            :style="field.style"
+            append-inner-icon="mdi-magnify"
+            @click:append-inner="() => onSearch(field.key)"
+            @click:clear="() => onClear(field.key)"
+          />
+        </v-col>
+      </v-row>
+    </template>
+  </v-toolbar>
 </template>

@@ -9,7 +9,7 @@ function encodeCacheKey(key) {
 const store = createStore({
   state: () => ({
     characters: [],
-    perPage: 25,
+    perPage: 24,
     page: 1,
     loading: false,
     error: null

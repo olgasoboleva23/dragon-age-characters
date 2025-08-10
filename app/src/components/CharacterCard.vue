@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons'
 import FullInfo from './FullInfo.vue'
 
 const props = defineProps({
@@ -16,7 +17,7 @@ const modal = ref(false)
   <v-card class="pa-3 ma-1 bg-blue-grey-lighten-4" variant="tonal">
     <v-img
       v-if="character.photo"
-      height="200"
+      :aspect-ratio="4/3"
       cover
       position="50% top"
       :src="character.photo.split('/revision/')[0]"
@@ -34,6 +35,9 @@ const modal = ref(false)
         color="teal-darken-2"
       >
         more
+        <font-awesome-icon 
+          :icon="faAnglesRight" 
+        />
       </v-btn>
     </v-row>
   </v-card>
